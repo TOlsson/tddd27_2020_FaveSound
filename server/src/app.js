@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
 const app = express(); // create your express app
-const secrets = require('../../secrets') // Secret information like db connection password
+//const secrets = require('../../secrets') // Secret information like db connection password
 // make app use dependencies
 app.use(morgan('dev'));
 app.use(bodyParser.json());
@@ -12,7 +12,8 @@ app.use(cors());
 
 const mongo = require('mongodb')
 const MongoClient = mongo.MongoClient
-const uri = secrets.MongoDbConnectionString
+//const uri = secrets.MongoDbConnectionString
+const uri = 'mongodb+srv://default-user:TDDD27_FTW@cluster0-6wvq8.gcp.mongodb.net/test?retryWrites=true&w=majority'
 var client;
 
 var mongoClient = new MongoClient(uri, {
