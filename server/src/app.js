@@ -12,8 +12,9 @@ app.use(cors());
 
 const mongo = require('mongodb')
 const MongoClient = mongo.MongoClient
-//const uri = secrets.MongoDbConnectionString
-const uri = 'mongodb+srv://default-user:TDDD27_FTW@cluster0-6wvq8.gcp.mongodb.net/test?retryWrites=true&w=majority'
+const uri = process.env.MongoDbConnectionString
+//const uri = 'mongodb+srv://default-user:'+process.env.mongoDB_secret+'@cluster0-6wvq8.gcp.mongodb.net/test?retryWrites=true&w=majority'
+console.log(process.env)
 var client;
 
 var mongoClient = new MongoClient(uri, {
