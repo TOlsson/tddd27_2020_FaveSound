@@ -8,8 +8,8 @@ production:
   stage: production
   image: ruby:latest
   script:
-    - apt update -qy
-    - apt install -y ruby-dev
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
     - gem install dpl
     - dpl --provider=heroku --app=favesound --api-key=$HEROKU_API_KEY
   only:
