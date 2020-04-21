@@ -11,6 +11,7 @@
 <script>
 import testAPI from '@/services/testAPI.js'
 export default {
+  name: 'test',
   data () {
     return {
       test1: []
