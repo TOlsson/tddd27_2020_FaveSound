@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const app = express(); // create your express app
 const SpotifyWebApi = require('spotify-web-api-node')
 const GoogleApi = require('googleapis')
+const jwt = require('jsonwebtoken')
 // make app use dependencies
 app.use(morgan('dev'));
 app.use(bodyParser.json());
@@ -41,7 +42,29 @@ const spotifyClientSecret = `${process.env.SPOTIFY_CLIENT_SECRET}`
     redirectUri: 'https://favesound.herokuapp.com/auth/spotify/callback'
 }) */
 
-const spotifyAuthOptions = {
+const spotifyAPI = new SpotifyWebApi({
+    clientId: spotifyClientId,
+    clientSecret: spotifyClientSecret
+});
+
+spotifyAPI.clientCredentialsGrant().then(data => {
+    spotifyAPI.setAccessToken(data.body.access_token);
+}, err => {
+    console.log(err);
+})
+
+app.get('/spotifyTest', (req, res) => {
+    spotifyAPI.searchTracks('artist:Sabaton').then(
+        data => {
+            console.log(data.body)
+            res.sendStatus(200)
+        }, err => {
+            console.log(err)
+        }
+    )
+})
+
+/* const spotifyAuthOptions = {
     url: 'https://accounts.spotify.com/api/token',
     headers: {
         'Authorization': 'Basic' + (new Buffer(spotifyClientId + ':' + spotifyClientSecret).toString('base64'))
@@ -50,7 +73,7 @@ const spotifyAuthOptions = {
         grant_type: 'client_credentials'
     },
     json: true
-}
+} */
 
 app.get('/auth/spotify/callback', (req, res) => {
 
@@ -60,6 +83,7 @@ app.get('/auth/spotify/callback', (req, res) => {
 const googleClientId = `${process.env.GOOGLE_CLIENT_ID}`
 const googleClientSecret = `${process.env.GOOGLE_CLIENT_SECRET}`
 var googleToken;
+var googleAuth;
 
 app.get('/auth/google/callback', (req, res) => {
     
@@ -67,13 +91,42 @@ app.get('/auth/google/callback', (req, res) => {
 
 // Save access token from Google Authentication
 app.post('/googleLogin', (req, res) => {
-    googleToken = req.body.googleToken
-    res.send(200)
+    // console.log(req.body)
+    googleToken = jwt.decode(req.body.googleToken)
+    // googleToken.sub == unique google id
+
+    const collection = client.db("favesound").collection("users")
+
+    collection.find({
+        userid: googleToken.sub.toString()
+    }, (err, user) => {
+        if (err) {
+            console.log(err)
+            res.sendStatus(404)
+        }
+        if(user) {
+            collection.updateOne({
+                userid: googleToken.sub.toString()
+            },
+            {
+               $set: {userid: googleToken.sub.toString(), favelist: []}
+            }, 
+            {
+                upsert: true
+            }, (error, result) => {
+                if(error) {
+                    console.log(error)
+                    res.sendStatus(420)
+                }
+                res.sendStatus(200)
+            })
+        }
+    })
 })
 
 
 app.get('/test', (req, res) => {
-    const collection = client.db("test").collection("test")
+    const collection = client.db("favesound").collection("users")
 
     collection.find().toArray((err, result) => {
         if (err) {
@@ -82,7 +135,7 @@ app.get('/test', (req, res) => {
             return;
         }
         res.send(result);
-    });
-});
+    })
+})
 
 app.listen(process.env.PORT || 8081); // client is already running on 8080
