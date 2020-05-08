@@ -14,4 +14,5 @@ For future goals Users should be able to listen to their favorite music from the
 We are planing on using a MEVN stack (MongoDb, Express.js, Vue.js, and Node.js). We are going to connect with Spotify's Web API to access information about different tracks and saving their IDs (as favourites) to our database connected to the signed in user. In the begining we will try to avoid that the user has to login to their Spotify account, but we see it as a possibility for the future to access their previous created playlists in Spotify.
 
 ## Screencasts
-To be added...
+
+* Mid-term Screencast: https://www.youtube.com/watch?v=hG0EzE1jvgk
