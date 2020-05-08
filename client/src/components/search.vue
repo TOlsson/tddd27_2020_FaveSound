@@ -6,10 +6,10 @@
             </li>
         </ul> -->
 
-        <h1 class="favesound">FaveSound</h1>
+        <h1 id="title">FaveSound</h1>
 
-        <form action="/#/serach" method="GET">
-            <input type="text" name="text" class="search" placeholder="Search for songs, artist, albums...">
+        <form action="/#/search" method="GET" class="searchForm">
+            <input type="text" name="text" class="searchArea" placeholder="Search for songs, artist, albums...">
             <input type="submit" name="submit" class="submit" value="Search">
         </form>
     </div>
@@ -42,22 +42,25 @@ export default {
 <style lang="css">
 @import url('../assets/fonts/stylesheet.css');
 
-h1 {
+#title {
   font-family: ethnocentricregular;
-}
-
-.favesound {
   text-align: center;
+  margin-top: 15vh;
+  font-size: 4vw;
 }
 
-.search {
+.searchArea {
   font-family: ethnocentricregular;
   width: 55%;
-  text-align: center;
 }
 
 .submit {
   font-family: ethnocentricregular;
+  text-align: center;
+}
+
+.searchForm {
+  margin: 0 auto;
   text-align: center;
 }
 

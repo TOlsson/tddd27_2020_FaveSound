@@ -40,17 +40,6 @@ export default {
   font-size: 4vw;
 }
 
-/*body.login {
-  width: 100%;
-  height: 100%;
-  background: url('../../files/images/login_background.jpg') no-repeat center center fixed;
-
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-}*/
-
 #sign-in-button {
   font-family: ethnocentricregular;
 
