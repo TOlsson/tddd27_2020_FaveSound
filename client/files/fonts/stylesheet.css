@@ -1,0 +1,7 @@
+@font-face {
+    font-family: 'ethnocentricregular';
+    src: url('ethnocentric.regular-webfont.woff2') format('woff2'),
+         url('ethnocentric.regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}

@@ -1,5 +1,8 @@
 <template lang="html">
-    <button v-google-signin-button="clientId" class="google-singin-button">Login with Google</button>
+    <div>
+      <h1 class="title">FaveSound</h1>
+      <button v-google-signin-button="clientId" class="google-singin-button">Login with Google</button>
+    </div>
 </template>
 
 <script>
@@ -25,4 +28,10 @@ export default {
 </script>
 
 <style lang="css">
+@import url('../../files/fonts/stylesheet.css');
+
+h1 {
+  font-family: ethnocentricregular;
+}
+
 </style>
