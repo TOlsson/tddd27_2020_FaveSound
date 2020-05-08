@@ -1,7 +1,7 @@
 <template lang="html">
-    <div>
-      <h1 class="title">FaveSound</h1>
-      <button v-google-signin-button="clientId" class="google-singin-button">Login with Google</button>
+    <div id ="background">
+      <h1 id="title">FaveSound</h1>
+      <button v-google-signin-button="clientId" class="google-singin-button" id="sign-in-button">Login with Google</button>
     </div>
 </template>
 
@@ -10,6 +10,9 @@ import loginAPI from '@/services/loginAPI.js'
 import router from '../router'
 export default {
   name: 'login',
+  beforeCreate: function () {
+    document.body.className = 'login'
+  },
   data: () => ({
     clientId: '592206751385-m2bon646bbi7oqpv0b42f9sftdo35qhq.apps.googleusercontent.com'
   }),
@@ -17,7 +20,7 @@ export default {
     async OnGoogleAuthSuccess (idToken) {
       const res = await loginAPI.googleLogin(idToken)
       if (res.status === 200) {
-        router.push({name: 'test'})
+        router.push({name: 'search'})
       }
     },
     OnGoogleAuthFail (error) {
@@ -27,11 +30,46 @@ export default {
 }
 </script>
 
-<style lang="css">
-@import url('../../files/fonts/stylesheet.css');
+<style scoped>
+@import url('../assets/fonts/stylesheet.css');
 
-h1 {
+#title {
   font-family: ethnocentricregular;
+  text-align: center;
+  margin-top: 15vh;
+  font-size: 4vw;
+}
+
+/*body.login {
+  width: 100%;
+  height: 100%;
+  background: url('../../files/images/login_background.jpg') no-repeat center center fixed;
+
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}*/
+
+#sign-in-button {
+  font-family: ethnocentricregular;
+
+  background-color: #dd4b39;
+  color: white;
+
+  width: 30%;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  margin: 5px 0;
+  opacity: 0.85;
+  display: inline-block;
+  font-size: 17px;
+  line-height: 20px;
+  text-decoration: none;
+
+  margin: 54vh auto 0 auto;
+  display: block;
 }
 
 </style>

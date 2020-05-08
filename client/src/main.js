@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import GoogleSignInButton from 'vue-google-signin-button-directive'
+import '@/assets/css/global.css'
 
 Vue.config.productionTip = false
 
