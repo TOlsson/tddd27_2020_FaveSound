@@ -47,37 +47,32 @@ const spotifyAPI = new SpotifyWebApi({
     clientSecret: spotifyClientSecret
 });
 
-spotifyAPI.clientCredentialsGrant().then(data => {
-    spotifyAPI.setAccessToken(data.body.access_token);
-}, err => {
-    console.log(err);
+function updateSpotifyCredentials() {
+    spotifyAPI.clientCredentialsGrant().then(data => {
+        spotifyAPI.setAccessToken(data.body.access_token);
+    }, err => {
+        console.log(err);
+    })
+}
+
+app.post('/searchTracks', (req, res) => {
+    searchTracks(req, res)
 })
 
-app.get('/spotifyTest', (req, res) => {
-    spotifyAPI.searchTracks('artist:Sabaton').then(
+function searchTracks(req, res) {
+    const query = req.body.query
+    spotifyAPI.searchTracks(query, {limit : 5}).then(
         data => {
-            console.log(data.body)
-            res.sendStatus(200)
+            res.send(data.body.tracks.items)
         }, err => {
             console.log(err)
+            if(err.statusCode === 401) {
+                updateSpotifyCredentials();
+                searchTracks(req, res)
+            }
         }
     )
-})
-
-/* const spotifyAuthOptions = {
-    url: 'https://accounts.spotify.com/api/token',
-    headers: {
-        'Authorization': 'Basic' + (new Buffer(spotifyClientId + ':' + spotifyClientSecret).toString('base64'))
-    },
-    form: {
-        grant_type: 'client_credentials'
-    },
-    json: true
-} */
-
-app.get('/auth/spotify/callback', (req, res) => {
-
-})
+}
 
 // Google Api initialization
 const googleClientId = `${process.env.GOOGLE_CLIENT_ID}`
@@ -85,13 +80,8 @@ const googleClientSecret = `${process.env.GOOGLE_CLIENT_SECRET}`
 var googleToken;
 var googleAuth;
 
-app.get('/auth/google/callback', (req, res) => {
-    
-})
-
 // Save access token from Google Authentication
 app.post('/googleLogin', (req, res) => {
-    // console.log(req.body)
     googleToken = jwt.decode(req.body.googleToken)
     // googleToken.sub == unique google id
 
@@ -109,7 +99,7 @@ app.post('/googleLogin', (req, res) => {
                 userid: googleToken.sub.toString()
             },
             {
-               $set: {userid: googleToken.sub.toString(), favelist: []}
+               $setOnInsert: {userid: googleToken.sub.toString(), favelist: []}
             }, 
             {
                 upsert: true
@@ -123,6 +113,40 @@ app.post('/googleLogin', (req, res) => {
         }
     })
 })
+
+app.get('/getFavelist', (req, res) => {
+
+    const collection = client.db("favesound").collection("users")
+
+    collection.find({
+        userid: googleToken.sub.toString()
+    }).toArray((err, user) => {
+        if(err) {
+            console.log(err)
+            res.sendStatus(404)
+        }
+        res.send(user[0].favelist)
+    })
+})
+
+app.post('/getTracks', (req, res) => {
+    postGetTracks(req, res);
+});
+
+function postGetTracks(req, res) {
+    const trackIDs = req.body.favelist.data.trackids
+    spotifyAPI.getTracks(trackIDs).then(
+        data => {
+            res.send(data.body.tracks)
+        }, err => {
+            console.log(err.statusCode)
+            if(err.statusCode === 401) {
+                updateSpotifyCredentials();
+                postGetTracks(req, res);
+            }
+        }
+    )
+}
 
 
 app.get('/test', (req, res) => {
