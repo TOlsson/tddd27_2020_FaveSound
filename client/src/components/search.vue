@@ -7,7 +7,9 @@
           <button v-on:click='search' name="submit" class="submit">Search</button>
 
           <div v-for='sTrack in searchedTracks' :key='sTrack' class="trackinfo" v-bind:id='`${sTrack.id}`'>
-            <span>Artist: </span><span v-for='(sArtist, sIndex) in sTrack.artists' :key='sArtist'>{{sArtist.name}}<span v-if="sIndex+1 < sTrack.artists.length">, </span></span><br><br>
+            <span>Artist: </span><span v-for='(sArtist, sIndex) in sTrack.artists' :key='sArtist'>{{sArtist.name}}<span v-if="sIndex+1 < sTrack.artists.length">, </span></span>
+            <b-icon icon='star' class='iconfix' v-on:click='addFavourite'></b-icon>
+            <br><br>
             <span>Track: {{sTrack.name}}</span><br><br>
             <span>Album: {{sTrack.album.name}}</span><br>
           </div>
@@ -16,7 +18,9 @@
         <div class="rightDiv">
           <h2 class="favourites">Favourites</h2>
           <div v-for='track in tracks' :key='track' class="trackinfo" v-bind:id='`${track.id}`'>
-            <span>Artist: </span><span v-for='(artist, index) in track.artists' :key='artist'>{{artist.name}}<span v-if="index+1 < track.artists.length">, </span></span><br><br>
+            <span>Artist: </span><span v-for='(artist, index) in track.artists' :key='artist'>{{artist.name}}<span v-if="index+1 < track.artists.length">, </span></span>
+            <b-icon icon='star-fill' class='iconfix' v-on:click='removeFavourite'></b-icon>
+            <br><br>
             <span>Track: {{track.name}}</span><br><br>
             <span>Album: {{track.album.name}}</span><br>
           </div>
@@ -39,10 +43,10 @@ export default {
     }
   },
   mounted () {
-    this.loadTest()
+    this.loadFavourites()
   },
   methods: {
-    async loadTest () {
+    async loadFavourites () {
       const favelist = await searchAPI.getFavelist()
       let trackInfo = await searchAPI.getTracks(favelist)
       this.tracks = trackInfo.data
@@ -50,6 +54,12 @@ export default {
     async search () {
       const searchedTracks = await searchAPI.searchTracks(this.searchQuery)
       this.searchedTracks = searchedTracks.data
+    },
+    async removeFavourite () {
+      console.log('remove')
+    },
+    async addFavourite () {
+      console.log('add')
     }
   }
 }
@@ -74,6 +84,7 @@ export default {
   font-family: ethnocentricregular;
   text-align: center;
   width: 9vw;
+  cursor: pointer;
 }
 
 .searchForm {
@@ -93,7 +104,7 @@ export default {
 }
 
 .trackinfo {
-  background-color: blue;
+  background-color: grey;
   width: 45vw;
   font-family: ethnocentricregular;
   font-size: 0.8em;
@@ -114,6 +125,19 @@ h3.trackinfo {
   margin-top: -5px;
   margin-bottom: -2px;
   text-align: center;
+}
+
+.iconfix {
+  float: right;
+  margin-right: 5px;
+  margin-top: 5px;
+  font-size: 1.8em;
+  color: gold;
+}
+
+.iconfix:hover {
+  cursor: pointer;
+  font-size: 1.9em;
 }
 
 </style>

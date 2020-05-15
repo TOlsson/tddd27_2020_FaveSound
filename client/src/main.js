@@ -5,6 +5,10 @@ import App from './App'
 import router from './router'
 import GoogleSignInButton from 'vue-google-signin-button-directive'
 import '@/assets/css/global.css'
+import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue'
+
+Vue.use(BootstrapVue)
+Vue.use(BootstrapVueIcons)
 
 Vue.config.productionTip = false
 
