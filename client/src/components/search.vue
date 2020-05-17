@@ -1,39 +1,6 @@
 <template lang="html">
     <div>
         <h1 id="title">FaveSound</h1>
-
-        <!--<div class="leftDiv">
-          <input v-model="searchQuery" type="text" name="text" class="searchArea" placeholder="Search for songs, artist, albums..." v-on:keyup.enter='search'>
-          <button v-on:click='search' name="submit" class="submit">Search</button>
-
-          <div v-for='sTrack in searchedTracks' :key='sTrack.id' class="trackinfo" :id='`${sTrack.id}`'>
-            <span>Artist: </span>
-            <span v-for='(sArtist, sIndex) in sTrack.artists' :key='sIndex'>{{sArtist.name}}
-              <span v-if="sIndex+1 < sTrack.artists.length">, </span>
-            </span>
-            <b-icon icon='star' class='iconfix' v-on:click='addFavourite'></b-icon>
-            <br><br>
-            <span>Track: {{sTrack.name}}</span><br><br>
-            <span>Album: {{sTrack.album.name}}</span><br>
-          </div>
-        </div>
-
-        <div class="rightDiv">
-          <h2 class="favourites">Favourites</h2>
-          <div v-if='faveListPresent'>
-            <div v-for='track in tracks' :key='track.id' class="trackinfo" :id='track.id'>
-              <span>Artist: </span>
-              <span v-for='(artist, index) in track.artists' :key='index'>{{artist.name}}
-                <span v-if="index+1 < track.artists.length">, </span>
-              </span>
-              <b-icon icon='star-fill' class='iconfix' v-on:click='removeFavourite'></b-icon>
-              <br><br>
-              <span>Track: {{track.name}}</span><br><br>
-              <span>Album: {{track.album.name}}</span><br>
-            </div>
-          </div>
-        </div> -->
-
         <div class="leftDiv">
           <input v-model="searchQuery" type="text" name="text" class="searchArea" placeholder="Search for songs, artist, albums..." v-on:keyup.enter='search'>
           <button v-on:click='search' name="submit" class="submit">Search</button>
@@ -84,11 +51,26 @@ export default {
       this.searched = true
       this.searchedTracks = searchedTracks.data
     },
-    async removeFavourite () {
-      console.log('remove')
+    async removeFavourite (event) {
+      // console.log(event.currentTarget.parentElement.id)
+      const newFavelist = await searchAPI.removeFavourite(this.$cookies.get('user').userid, event.currentTarget.parentElement.id)
+      if (newFavelist.status === 204) {
+        // Set false since we dont want to display and make an unneccecary request to the server
+        this.faveListPresent = false
+      } else {
+        this.faveListPresent = true
+        let trackInfo = await searchAPI.getTracks(newFavelist)
+        this.tracks = trackInfo.data
+      }
+      this.loadFavourites()
     },
-    async addFavourite () {
-      console.log('add')
+    async addFavourite (event) {
+      // console.log(event.target.parentElement)
+      const newFavelist = await searchAPI.addFavourite(this.$cookies.get('user').userid, event.currentTarget.parentElement.id)
+      this.faveListPresent = true
+      let trackInfo = await searchAPI.getTracks(newFavelist)
+      this.tracks = trackInfo.data
+      this.loadFavourites()
     }
   }
 }

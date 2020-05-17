@@ -55,9 +55,7 @@ function updateSpotifyCredentials() {
     })
 }
 
-app.post('/searchTracks', (req, res) => {
-    searchTracks(req, res)
-})
+app.post('/searchTracks', searchTracks)
 
 function searchTracks(req, res) {
     const query = req.body.query
@@ -116,8 +114,11 @@ app.post('/googleLogin', (req, res) => {
 })
 
 app.post('/getFavelist', (req, res) => {
-
     const userid = JSON.parse(req.body.userid).userid
+    getFavelist(userid, res)
+})
+
+function getFavelist(userid, res) {
 
     const collection = client.db("favesound").collection("users")
 
@@ -128,20 +129,19 @@ app.post('/getFavelist', (req, res) => {
             console.log(err)
             res.sendStatus(404)
         }
-        if( !Array.isArray(user[0].favelist.trackids) || !user[0].favelist.trackids.length) {
+        if( !Array.isArray(user[0].favelist) || !user[0].favelist.length) {
             res.status(204).send('Favelist is empty')
         } else {
             res.send(user[0].favelist)
         }
     })
-})
+}
 
-app.post('/getTracks', (req, res) => {
-    postGetTracks(req, res);
-});
+app.post('/getTracks', postGetTracks);
 
 function postGetTracks(req, res) {
-    const trackIDs = req.body.favelist.data.trackids
+
+    const trackIDs = req.body.favelist.data
     spotifyAPI.getTracks(trackIDs).then(
         data => {
             res.send(data.body.tracks)
@@ -155,18 +155,32 @@ function postGetTracks(req, res) {
     )
 }
 
+app.post('/addFavourite', (req, res) => {
+    const userid = JSON.parse(req.body.userid).userid
+    const trackid = req.body.trackid
 
-app.get('/test', (req, res) => {
     const collection = client.db("favesound").collection("users")
 
-    collection.find().toArray((err, result) => {
-        if (err) {
-            console.log(err);
-            res.send([]);
-            return;
-        }
-        res.send(result);
-    })
+    collection.updateOne(
+        { userid: userid}, 
+        { $addToSet: { favelist: trackid }}
+    )
+
+    getFavelist(userid, res)
+})
+
+app.post('/removeFavourite', (req, res) => {
+    const userid = JSON.parse(req.body.userid).userid
+    const trackid = req.body.trackid
+
+    const collection = client.db("favesound").collection("users")
+
+    collection.updateOne(
+        { userid: userid},
+        { $pull: { favelist: trackid }}
+    )
+
+    getFavelist(userid, res)
 })
 
 app.listen(process.env.PORT || 8081); // client is already running on 8080

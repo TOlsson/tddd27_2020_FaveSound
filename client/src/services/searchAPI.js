@@ -13,5 +13,17 @@ export default {
     return API().post('searchTracks', {
       query: searchQuery
     })
+  },
+  addFavourite (userid, trackid) {
+    return API().post('addFavourite', {
+      userid: userid,
+      trackid: trackid
+    })
+  },
+  removeFavourite (userid, trackid) {
+    return API().post('removeFavourite', {
+      userid: userid,
+      trackid: trackid
+    })
   }
 }

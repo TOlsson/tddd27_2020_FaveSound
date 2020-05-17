@@ -2,12 +2,15 @@
 <template>
   <div v-if='print'>
     <div v-for='track in tracks' :key='track.id' class="trackinfo" :id='track.id'>
-      <span>Artist: </span>
-      <span v-for='(artist, index) in track.artists' :key='index'>{{artist.name}}
-      <span v-if="index+1 < track.artists.length">, </span>
-      </span>
-      <b-icon v-if='side === "left"' icon='star' class='iconfix' v-on:click='functionOnClick'></b-icon>
-      <b-icon v-else icon='star-fill' class='iconfix' v-on:click='functionOnClick'></b-icon>
+      <img class='imageFix' :src='track.album.images[2].url'>
+      <div>
+        <span style='position: relative; top: 10px;' >Artist: </span>
+        <span style='position: relative; top: 10px;' v-for='(artist, index) in track.artists' :key='index'>{{artist.name}}
+          <span v-if="index+1 < track.artists.length">, </span>
+        </span>
+      </div>
+      <b-icon v-if='side === "left"' icon='star' class='iconfix' v-on:click='functionOnClick($event)'></b-icon>
+      <b-icon v-else icon='star-fill' class='iconfix' v-on:click='functionOnClick($event)'></b-icon>
       <br><br>
       <span>Track: {{track.name}}</span><br><br>
       <span>Album: {{track.album.name}}</span><br>
@@ -39,17 +42,16 @@ export default {
   margin-inline-start: 0px;
   margin-inline-end: 0px;
   font-weight: bold;
-
-}
-
-h3.trackinfo {
-  font-size: 0.8em;
+  height: 84px;
+  line-height: 12px;
+  border-radius: 10px;
+  display: table;
 }
 
 .iconfix {
   float: right;
-  margin-right: 5px;
-  margin-top: 5px;
+  margin-right: 10px;
+  margin-top: -5px;
   font-size: 1.8em;
   color: gold;
 }
@@ -57,5 +59,11 @@ h3.trackinfo {
 .iconfix:hover {
   cursor: pointer;
   font-size: 1.9em;
+}
+
+.imageFix {
+  float: left;
+  margin: 10px;
+  border-radius: 10px;
 }
 </style>
