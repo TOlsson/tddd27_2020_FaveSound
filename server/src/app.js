@@ -128,7 +128,11 @@ app.post('/getFavelist', (req, res) => {
             console.log(err)
             res.sendStatus(404)
         }
-        res.send(user[0].favelist)
+        if( !Array.isArray(user[0].favelist.trackids) || !user[0].favelist.trackids.length) {
+            res.status(204).send('Favelist is empty')
+        } else {
+            res.send(user[0].favelist)
+        }
     })
 })
 

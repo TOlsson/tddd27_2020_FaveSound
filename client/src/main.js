@@ -7,6 +7,7 @@ import GoogleSignInButton from 'vue-google-signin-button-directive'
 import '@/assets/css/global.css'
 import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue'
 import VueCookies from 'vue-cookies'
+import trackBox from './components/TrackBox'
 
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
@@ -16,6 +17,8 @@ Vue.$cookies.set('theme', 'default')
 Vue.$cookies.set('hover-time', '1s')
 
 Vue.config.productionTip = false
+
+Vue.component('track-box', trackBox)
 
 /* eslint-disable no-new */
 new Vue({

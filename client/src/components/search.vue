@@ -2,12 +2,15 @@
     <div>
         <h1 id="title">FaveSound</h1>
 
-        <div class="leftDiv">
+        <!--<div class="leftDiv">
           <input v-model="searchQuery" type="text" name="text" class="searchArea" placeholder="Search for songs, artist, albums..." v-on:keyup.enter='search'>
           <button v-on:click='search' name="submit" class="submit">Search</button>
 
-          <div v-for='sTrack in searchedTracks' :key='sTrack' class="trackinfo" v-bind:id='`${sTrack.id}`'>
-            <span>Artist: </span><span v-for='(sArtist, sIndex) in sTrack.artists' :key='sArtist'>{{sArtist.name}}<span v-if="sIndex+1 < sTrack.artists.length">, </span></span>
+          <div v-for='sTrack in searchedTracks' :key='sTrack.id' class="trackinfo" :id='`${sTrack.id}`'>
+            <span>Artist: </span>
+            <span v-for='(sArtist, sIndex) in sTrack.artists' :key='sIndex'>{{sArtist.name}}
+              <span v-if="sIndex+1 < sTrack.artists.length">, </span>
+            </span>
             <b-icon icon='star' class='iconfix' v-on:click='addFavourite'></b-icon>
             <br><br>
             <span>Track: {{sTrack.name}}</span><br><br>
@@ -17,19 +20,35 @@
 
         <div class="rightDiv">
           <h2 class="favourites">Favourites</h2>
-          <div v-for='track in tracks' :key='track' class="trackinfo" v-bind:id='`${track.id}`'>
-            <span>Artist: </span><span v-for='(artist, index) in track.artists' :key='artist'>{{artist.name}}<span v-if="index+1 < track.artists.length">, </span></span>
-            <b-icon icon='star-fill' class='iconfix' v-on:click='removeFavourite'></b-icon>
-            <br><br>
-            <span>Track: {{track.name}}</span><br><br>
-            <span>Album: {{track.album.name}}</span><br>
+          <div v-if='faveListPresent'>
+            <div v-for='track in tracks' :key='track.id' class="trackinfo" :id='track.id'>
+              <span>Artist: </span>
+              <span v-for='(artist, index) in track.artists' :key='index'>{{artist.name}}
+                <span v-if="index+1 < track.artists.length">, </span>
+              </span>
+              <b-icon icon='star-fill' class='iconfix' v-on:click='removeFavourite'></b-icon>
+              <br><br>
+              <span>Track: {{track.name}}</span><br><br>
+              <span>Album: {{track.album.name}}</span><br>
+            </div>
           </div>
+        </div> -->
+
+        <div class="leftDiv">
+          <input v-model="searchQuery" type="text" name="text" class="searchArea" placeholder="Search for songs, artist, albums..." v-on:keyup.enter='search'>
+          <button v-on:click='search' name="submit" class="submit">Search</button>
+          <track-box :tracks='searchedTracks' :print='searched' :functionOnClick='addFavourite' :side='`left`'></track-box>
+        </div>
+        <div class ="rightDiv">
+          <h2 class="favourites">Favourites</h2>
+          <track-box :tracks='tracks' :print='faveListPresent' :functionOnClick='removeFavourite' :side='`right`'></track-box>
         </div>
     </div>
 </template>
 
 <script>
 import searchAPI from '@/services/searchAPI.js'
+
 export default {
   name: 'search',
   beforeCreate: function () {
@@ -39,7 +58,9 @@ export default {
     return {
       tracks: [],
       searchQuery: '',
-      searchedTracks: []
+      searchedTracks: [],
+      faveListPresent: Boolean,
+      searched: Boolean
     }
   },
   mounted () {
@@ -48,11 +69,19 @@ export default {
   methods: {
     async loadFavourites () {
       const favelist = await searchAPI.getFavelist(this.$cookies.get('user').userid)
-      let trackInfo = await searchAPI.getTracks(favelist)
-      this.tracks = trackInfo.data
+      // Check if current user has a present favelist or not
+      if (favelist.status === 204) {
+        // Set false since we dont want to display and make an unneccecary request to the server
+        this.faveListPresent = false
+      } else {
+        this.faveListPresent = true
+        let trackInfo = await searchAPI.getTracks(favelist)
+        this.tracks = trackInfo.data
+      }
     },
     async search () {
       const searchedTracks = await searchAPI.searchTracks(this.searchQuery)
+      this.searched = true
       this.searchedTracks = searchedTracks.data
     },
     async removeFavourite () {
@@ -88,8 +117,6 @@ export default {
 }
 
 .searchForm {
-  /* margin: 0 auto; */
-  /* text-align: center; */
   width: auto;
 }
 
@@ -103,41 +130,11 @@ export default {
   margin-right: 16px;
 }
 
-.trackinfo {
-  background-color: grey;
-  width: 45vw;
-  font-family: ethnocentricregular;
-  font-size: 0.8em;
-  margin-block-start: 1em;
-  margin-block-end: 1em;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
-  font-weight: bold;
-
-}
-
-h3.trackinfo {
-  font-size: 0.8em;
-}
-
 .favourites {
   font-family: ethnocentricregular;
   margin-top: -5px;
   margin-bottom: -2px;
   text-align: center;
-}
-
-.iconfix {
-  float: right;
-  margin-right: 5px;
-  margin-top: 5px;
-  font-size: 1.8em;
-  color: gold;
-}
-
-.iconfix:hover {
-  cursor: pointer;
-  font-size: 1.9em;
 }
 
 </style>
