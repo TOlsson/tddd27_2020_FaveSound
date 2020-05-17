@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     async loadFavourites () {
-      const favelist = await searchAPI.getFavelist()
+      const favelist = await searchAPI.getFavelist(this.$cookies.get('user').userid)
       let trackInfo = await searchAPI.getTracks(favelist)
       this.tracks = trackInfo.data
     },

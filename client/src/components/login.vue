@@ -20,6 +20,7 @@ export default {
     async OnGoogleAuthSuccess (idToken) {
       const res = await loginAPI.googleLogin(idToken)
       if (res.status === 200) {
+        this.$cookies.set('user', {userid: res.request.response})
         router.push({name: 'search'})
       }
     },

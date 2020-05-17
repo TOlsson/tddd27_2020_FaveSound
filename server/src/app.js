@@ -108,18 +108,21 @@ app.post('/googleLogin', (req, res) => {
                     console.log(error)
                     res.sendStatus(420)
                 }
-                res.sendStatus(200)
+                console.log(googleToken.sub.toString())
+                res.status(200).send({userid: googleToken.sub.toString()})
             })
         }
     })
 })
 
-app.get('/getFavelist', (req, res) => {
+app.post('/getFavelist', (req, res) => {
+
+    const userid = JSON.parse(req.body.userid).userid
 
     const collection = client.db("favesound").collection("users")
 
     collection.find({
-        userid: googleToken.sub.toString()
+        userid: userid
     }).toArray((err, user) => {
         if(err) {
             console.log(err)

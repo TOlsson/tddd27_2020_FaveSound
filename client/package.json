@@ -17,6 +17,7 @@
     "axios": "^0.19.2",
     "bootstrap-vue": "^2.14.0",
     "vue": "^2.5.2",
+    "vue-cookies": "^1.7.0",
     "vue-google-signin-button-directive": "^1.0.3",
     "vue-router": "^3.0.1"
   },

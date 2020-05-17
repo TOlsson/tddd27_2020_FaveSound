@@ -6,9 +6,14 @@ import router from './router'
 import GoogleSignInButton from 'vue-google-signin-button-directive'
 import '@/assets/css/global.css'
 import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue'
+import VueCookies from 'vue-cookies'
 
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
+
+Vue.use(VueCookies)
+Vue.$cookies.set('theme', 'default')
+Vue.$cookies.set('hover-time', '1s')
 
 Vue.config.productionTip = false
 
