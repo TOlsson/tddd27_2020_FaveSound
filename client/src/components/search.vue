@@ -147,17 +147,17 @@ export default {
 }
 
 ::-webkit-scrollbar-track { /* Scrollkanten */
-  box-shadow: inset 0 0 5px rgba(128, 128, 128, 0.205);
+  box-shadow: inset 0 0 5px rgba(128, 128, 128, 0.281);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgb(150, 150, 150);
+  background: rgb(99, 99, 99);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(133, 133, 133);
+  background: rgb(68, 68, 68);
 }
 
 </style>
