@@ -14,7 +14,8 @@ export default {
     document.body.className = 'login'
   },
   data: () => ({
-    clientId: '592206751385-m2bon646bbi7oqpv0b42f9sftdo35qhq.apps.googleusercontent.com'
+    clientId: '592206751385-m2bon646bbi7oqpv0b42f9sftdo35qhq.apps.googleusercontent.com' // When using localhost
+    // clientId: '592206751385-46likdak30iu58t4gn3q0v5jrruregmn.apps.googleusercontent.com' // When using netlify
   }),
   methods: {
     async OnGoogleAuthSuccess (idToken) {

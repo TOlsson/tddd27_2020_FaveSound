@@ -78,7 +78,7 @@ export default {
       this.loadFavourites()
     },
     async addFavourite (event) {
-      console.log(event.currentTarget)
+      // console.log(event.currentTarget)
       const newFavelist = await searchAPI.addFavourite(this.$cookies.get('user').userid, event.currentTarget.parentElement.id)
       this.faveListPresent = true
       let trackInfo = await searchAPI.getTracks(newFavelist)
