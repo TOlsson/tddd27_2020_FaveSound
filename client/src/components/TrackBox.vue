@@ -34,7 +34,7 @@ export default {
 
 .trackinfo {
   background-color: grey;
-  width: 45vw;
+  width: 44vw;
   font-family: ethnocentricregular;
   font-size: 0.8em;
   margin-block-start: 1em;
@@ -46,6 +46,8 @@ export default {
   line-height: 12px;
   border-radius: 10px;
   display: table;
+  margin-left: 10px;
+  margin-right: 5px;
 }
 
 .iconfix {

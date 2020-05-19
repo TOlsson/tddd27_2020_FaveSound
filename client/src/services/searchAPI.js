@@ -9,9 +9,10 @@ export default {
       favelist: favelist
     })
   },
-  searchTracks (searchQuery) {
+  searchTracks (searchQuery, limit) {
     return API().post('searchTracks', {
-      query: searchQuery
+      query: searchQuery,
+      limit: limit
     })
   },
   addFavourite (userid, trackid) {

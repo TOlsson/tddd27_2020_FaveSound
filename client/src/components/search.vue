@@ -2,13 +2,23 @@
     <div>
         <h1 id="title">FaveSound</h1>
         <div class="leftDiv">
-          <input v-model="searchQuery" type="text" name="text" class="searchArea" placeholder="Search for songs, artist, albums..." v-on:keyup.enter='search'>
+          <input v-model="searchQuery" type="text" name="text" autocomplete="off" class="searchArea" placeholder="Search for songs, artist, albums..." v-on:keyup.enter='search'>
+          <select v-model="limit" id='limit' name='limit'>
+            <option value='5'>5</option>
+            <option value='10'>10</option>
+            <option value='15'>15</option>
+            <option value='20'>20</option>
+          </select>
           <button v-on:click='search' name="submit" class="submit">Search</button>
-          <track-box :tracks='searchedTracks' :print='searched' :functionOnClick='addFavourite' :side='`left`'></track-box>
+          <div class='scroll-box'>
+            <track-box :tracks='searchedTracks' :print='searched' :functionOnClick='addFavourite' :side='`left`'></track-box>
+          </div>
         </div>
         <div class ="rightDiv">
           <h2 class="favourites">Favourites</h2>
-          <track-box :tracks='tracks' :print='faveListPresent' :functionOnClick='removeFavourite' :side='`right`'></track-box>
+          <div class='scroll-box'>
+            <track-box :tracks='tracks' :print='faveListPresent' :functionOnClick='removeFavourite' :side='`right`'></track-box>
+          </div>
         </div>
     </div>
 </template>
@@ -27,7 +37,8 @@ export default {
       searchQuery: '',
       searchedTracks: [],
       faveListPresent: Boolean,
-      searched: Boolean
+      searched: Boolean,
+      limit: 5
     }
   },
   mounted () {
@@ -47,7 +58,7 @@ export default {
       }
     },
     async search () {
-      const searchedTracks = await searchAPI.searchTracks(this.searchQuery)
+      const searchedTracks = await searchAPI.searchTracks(this.searchQuery, this.limit)
       this.searched = true
       this.searchedTracks = searchedTracks.data
     },
@@ -88,13 +99,13 @@ export default {
 
 .searchArea {
   font-family: ethnocentricregular;
-  width: 35.3vw;
+  width: 34.6vw;
 }
 
 .submit {
   font-family: ethnocentricregular;
   text-align: center;
-  width: 9vw;
+  width: 8vw;
   cursor: pointer;
 }
 
@@ -117,6 +128,32 @@ export default {
   margin-top: -5px;
   margin-bottom: -2px;
   text-align: center;
+}
+
+.scroll-box {
+  border-radius: 15px;
+  background-color: rgba(212, 209, 209, 0.74);
+  max-height: 592px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+::-webkit-scrollbar { /* Scrollbaren */
+  width: 12px;
+}
+
+::-webkit-scrollbar-track { /* Scrollkanten */
+  box-shadow: inset 0 0 5px rgba(128, 128, 128, 0.205);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(150, 150, 150);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(133, 133, 133);
 }
 
 </style>

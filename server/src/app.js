@@ -59,7 +59,8 @@ app.post('/searchTracks', searchTracks)
 
 function searchTracks(req, res) {
     const query = req.body.query
-    spotifyAPI.searchTracks(query, {limit : 5}).then(
+    const limit = req.body.limit
+    spotifyAPI.searchTracks(query, {limit : limit}).then(
         data => {
             res.send(data.body.tracks.items)
         }, err => {
