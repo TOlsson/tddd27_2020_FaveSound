@@ -2,14 +2,16 @@
     <div>
         <h1 id="title">FaveSound</h1>
         <div class="leftDiv">
-          <input v-model="searchQuery" type="text" name="text" autocomplete="off" class="searchArea" placeholder="Search for songs, artist, albums..." v-on:keyup.enter='search'>
-          <select v-model="limit" id='limit' name='limit'>
-            <option value='5'>5</option>
-            <option value='10'>10</option>
-            <option value='15'>15</option>
-            <option value='20'>20</option>
-          </select>
-          <button v-on:click='search' name="submit" class="submit">Search</button>
+          <div class="searchArea">
+            <input v-model="searchQuery" type="text" name="text" autocomplete="off" class="searchField" placeholder="Search for songs, artist, albums..." v-on:keyup.enter='search'>
+            <select v-model="limit" id='limit' name='limit'>
+              <option value='5'>5</option>
+              <option value='10'>10</option>
+              <option value='15'>15</option>
+              <option value='20'>20</option>
+            </select>
+            <button v-on:click='search' name="submit" class="submit">Search</button>
+          </div>
           <div class='scroll-box'>
             <track-box :tracks='searchedTracks' :print='searched' :functionOnClick='addFavourite' :side='`left`'></track-box>
           </div>
@@ -76,7 +78,7 @@ export default {
       this.loadFavourites()
     },
     async addFavourite (event) {
-      // console.log(event.target.parentElement)
+      console.log(event.currentTarget)
       const newFavelist = await searchAPI.addFavourite(this.$cookies.get('user').userid, event.currentTarget.parentElement.id)
       this.faveListPresent = true
       let trackInfo = await searchAPI.getTracks(newFavelist)
@@ -98,8 +100,13 @@ export default {
 }
 
 .searchArea {
+  margin-bottom: 5px;
+}
+
+.searchField {
   font-family: ethnocentricregular;
-  width: 34.6vw;
+  width: 33.6vw;
+  margin-left: 9px;
 }
 
 .submit {
@@ -109,13 +116,10 @@ export default {
   cursor: pointer;
 }
 
-.searchForm {
-  width: auto;
-}
-
 .leftDiv {
-  width: 45.1vw;
+  /* width: 45.1vw; */
   float: left;
+  margin-left: 16px;
 }
 
 .rightDiv {
@@ -126,7 +130,7 @@ export default {
 .favourites {
   font-family: ethnocentricregular;
   margin-top: -5px;
-  margin-bottom: -2px;
+  margin-bottom: 3px;
   text-align: center;
 }
 

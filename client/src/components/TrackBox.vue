@@ -5,9 +5,7 @@
       <img class='imageFix' :src='track.album.images[2].url'>
       <div>
         <span style='position: relative; top: 10px;' >Artist: </span>
-        <span style='position: relative; top: 10px;' v-for='(artist, index) in track.artists' :key='index'>{{artist.name}}
-          <span v-if="index+1 < track.artists.length">, </span>
-        </span>
+        <span style='position: relative; top: 10px;' v-for='(artist, index) in track.artists' :key='index'>{{artist.name}}<span v-if="index+1 < track.artists.length">, </span></span>
       </div>
       <b-icon v-if='side === "left"' icon='star' class='iconfix' v-on:click='functionOnClick($event)'></b-icon>
       <b-icon v-else icon='star-fill' class='iconfix' v-on:click='functionOnClick($event)'></b-icon>
@@ -47,7 +45,7 @@ export default {
   border-radius: 10px;
   display: table;
   margin-left: 10px;
-  margin-right: 5px;
+  margin-right: 10px;
 }
 
 .iconfix {
@@ -61,6 +59,10 @@ export default {
 .iconfix:hover {
   cursor: pointer;
   font-size: 1.9em;
+}
+
+.iconfix:active {
+  font-size: 1.7em;
 }
 
 .imageFix {
