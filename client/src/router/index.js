@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
 import search from '@/components/search'
 import login from '@/components/login'
 
@@ -10,18 +9,13 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      name: 'login',
+      component: login
     },
     {
       path: '/search',
       name: 'search',
       component: search
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: login
     }
   ]
 })
