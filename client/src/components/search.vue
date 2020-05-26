@@ -1,10 +1,11 @@
 <template lang="html">
     <div>
+        <b-button variant="danger" class="signOutButton" v-on:click='signOut'>Sign out</b-button>
         <h1 id="title">FaveSound</h1>
         <div class="leftDiv">
           <div class="searchArea">
             <input v-model="searchQuery" type="text" name="text" autocomplete="off" class="searchField" placeholder="Search for songs, artist, albums..." v-on:keyup.enter='search'>
-            <select v-model="limit" id='limit' name='limit'>
+            <select v-model="limit" id='limit' name='limit' v-on:change='search'>
               <option value='5'>5</option>
               <option value='10'>10</option>
               <option value='15'>15</option>
@@ -27,6 +28,7 @@
 
 <script>
 import searchAPI from '@/services/searchAPI.js'
+import router from '../router'
 
 export default {
   name: 'search',
@@ -48,15 +50,19 @@ export default {
   },
   methods: {
     async loadFavourites () {
-      const favelist = await searchAPI.getFavelist(this.$cookies.get('user').userid)
-      // Check if current user has a present favelist or not
-      if (favelist.status === 204) {
-        // Set false since we dont want to display and make an unneccecary request to the server
-        this.faveListPresent = false
+      if (this.$cookies.isKey('user')) {
+        const favelist = await searchAPI.getFavelist(this.$cookies.get('user').userid)
+        // Check if current user has a present favelist or not
+        if (favelist.status === 204) {
+          // Set false since we dont want to display and make an unneccecary request to the server
+          this.faveListPresent = false
+        } else {
+          this.faveListPresent = true
+          let trackInfo = await searchAPI.getTracks(favelist)
+          this.tracks = trackInfo.data
+        }
       } else {
-        this.faveListPresent = true
-        let trackInfo = await searchAPI.getTracks(favelist)
-        this.tracks = trackInfo.data
+        router.push({name: 'login'})
       }
     },
     async search () {
@@ -84,6 +90,10 @@ export default {
       let trackInfo = await searchAPI.getTracks(newFavelist)
       this.tracks = trackInfo.data
       this.loadFavourites()
+    },
+    async signOut () {
+      this.$cookies.remove('user')
+      router.push({name: 'login'})
     }
   }
 }
@@ -97,6 +107,13 @@ export default {
   text-align: center;
   margin-top: 15vh;
   font-size: 4vw;
+  margin-bottom: 5vh;
+}
+
+.signOutButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 
 .searchArea {
@@ -107,6 +124,13 @@ export default {
   font-family: ethnocentricregular;
   width: 33.6vw;
   margin-left: 9px;
+  font-size: 1.5vh;
+}
+
+#limit {
+  font-family: ethnocentricregular;
+  padding-bottom: 3px;
+  font-size: 1.6vh;
 }
 
 .submit {
@@ -114,6 +138,7 @@ export default {
   text-align: center;
   width: 8vw;
   cursor: pointer;
+  font-size: 1.5vh;
 }
 
 .leftDiv {
