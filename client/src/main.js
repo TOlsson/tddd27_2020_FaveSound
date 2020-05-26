@@ -6,6 +6,8 @@ import router from './router'
 import GoogleSignInButton from 'vue-google-signin-button-directive'
 import '@/assets/css/global.css'
 import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 import VueCookies from 'vue-cookies'
 import trackBox from './components/TrackBox'
 
