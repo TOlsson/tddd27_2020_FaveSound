@@ -18,4 +18,4 @@ We are planing on using a MEVN stack (MongoDb, Express.js, Vue.js, and Node.js).
 * Mid-term Screencast: https://www.youtube.com/watch?v=hG0EzE1jvgk
 * Final project presentation: https://www.youtube.com/watch?v=USq0EIAQLEA
 * Tobias individual: https://www.youtube.com/watch?v=GOgIfmgNZLg
-* Andreas individual: 
+* Andreas individual: https://youtu.be/x41uvSx41tI
